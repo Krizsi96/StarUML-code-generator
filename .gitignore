@@ -108,3 +108,5 @@ out/
 
 # Models
 models/
+
+.fuse_*
