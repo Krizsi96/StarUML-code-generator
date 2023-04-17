@@ -2,6 +2,18 @@
   const _supers = element.getGeneralElements();
   const _extends = _supers.length > 0 ? ': public ' + _supers[0].name : '';
 
+  let attributes = element.attributes;
+  let methods = element.operations;
+  let enumerations = [];
+  let log = [];
+
+  for (i = 0, len = element.ownedElements.length; i < len; i++) {
+    let elem = element.ownedElements[i];
+    if (elem instanceof type.UMLEnumeration) {
+      enumerations.push(elem);
+    }
+  }
+
   /**
    * Return visibility
    * @param {type.Model} elem
@@ -131,6 +143,34 @@
   }
 
   /**
+   * create declaration for enumeration
+   * @param {type.Model} enumeration
+   * @return {string}
+   */
+  function declareEnumeration(enumeration) {
+    let declaration = [];
+    declaration.push('enum ' + enumeration.name);
+    declaration.push('{');
+    declaration.push(declareEnumerationLiterals(enumeration));
+    declaration.push('};');
+    return declaration.join('\n\t');
+  }
+
+  /**
+   * list enumeration literals for declaration
+   * @param {type.Model} enumeration
+   * @return {string}
+   */
+  function declareEnumerationLiterals(enumeration) {
+    let declaration = [];
+    let literals = enumeration.literals;
+    for (i = 0; i < literals.length; i++) {
+      declaration.push(literals[i].name);
+    }
+    return declaration.join(', ');
+  }
+
+  /**
    * declare all attributes with the same type of visibility
    * @param {string} visibility
    * @return {string}
@@ -139,7 +179,7 @@
     let declaration = [];
     let declaration_index = 0;
 
-    element.attributes.forEach((attr, index, array) =>
+    attributes.forEach((attr, index, array) =>
     {
       if (getVisibility(attr) == visibility) {
         declaration[declaration_index] = declareAttribute(attr);
@@ -160,10 +200,31 @@
     let declaration = [];
     let declaration_index = 0;
 
-    element.operations.forEach((method, index, array) => 
+    methods.forEach((method, index, array) => 
     {
       if (getVisibility(method) == visibility) {
         declaration[declaration_index] = declareMethod(method);
+        declaration_index++;
+      }
+    });
+    declaration.push('');
+
+    return declaration.join('\n\t');
+  }
+
+  /**
+   * declare all enumerations with the same type of visibility
+   * @param {string} visibility
+   * @return {string array}
+   */
+  function Enumerations(visibility) {
+    let declaration = [];
+    let declaration_index = 0;
+
+    enumerations.forEach((enumeration, index, array) => 
+    {
+      if (getVisibility(enumeration) == visibility) {
+        declaration[declaration_index] = declareEnumeration(enumeration);
         declaration_index++;
       }
     });
@@ -181,11 +242,11 @@
 
 <%# Class declaration -%>
 class <%=element.name%><%=_extends%> {
-<%= 'private:\n\t' + Attributes('private') + Methods('private')-%>
+<%= 'private:\n\t' + Attributes('private') + Methods('private') + Enumerations('private')-%>
 
-<%= 'protected:\n\t' + Attributes('protected') + Methods('protected')-%>
+<%= 'protected:\n\t' + Attributes('protected') + Methods('protected') + Enumerations('protected')-%>
 
-<%= 'public:\n\t' + Attributes('public') + Methods('public')-%>
+<%= 'public:\n\t' + Attributes('public') + Methods('public') + Enumerations('public')-%>
 };
 
 <%# Header guard end -%>
