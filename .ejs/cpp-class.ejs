@@ -242,11 +242,11 @@
 
 <%# Class declaration -%>
 class <%=element.name%><%=_extends%> {
-<%= 'private:\n\t' + Attributes('private') + Methods('private') + Enumerations('private')-%>
+<%= 'public:\n\t' + Attributes('public') + Methods('public') + Enumerations('public')-%>
 
 <%= 'protected:\n\t' + Attributes('protected') + Methods('protected') + Enumerations('protected')-%>
 
-<%= 'public:\n\t' + Attributes('public') + Methods('public') + Enumerations('public')-%>
+<%= 'private:\n\t' + Attributes('private') + Methods('private') + Enumerations('private')-%>
 };
 
 <%# Header guard end -%>
