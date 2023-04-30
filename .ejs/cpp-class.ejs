@@ -127,7 +127,11 @@
     let declaration = [];
     let parameters = method.getNonReturnParameters();
     for (i = 0; i < parameters.length; i++) {
-      declaration.push(parameters[i].type + ' ' + parameters[i].name);
+      if(parameters[i].type instanceof type.UMLEnumeration) {
+        declaration.push(parameters[i].type.name + ' ' + parameters[i].name);
+      } else {
+        declaration.push(parameters[i].type + ' ' + parameters[i].name);
+      }
     }
     return declaration.join(', ');
   }
