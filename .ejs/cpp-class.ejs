@@ -7,234 +7,16 @@
   let enumerations = [];
   let log = [];
 
+  const {getVisibility, getModifiers, getType} = require('E:\\Projects\\UML_code_generator\\.ejs\\get_functions.js');
+  const {Methods} = require('E:\\Projects\\UML_code_generator\\.ejs\\method_declaration.js');
+  const {Enumerations} = require('E:\\Projects\\UML_code_generator\\.ejs\\enum_declaration.js');
+  const {Attributes} = require('E:\\Projects\\UML_code_generator\\.ejs\\attribute_declaration.js');
+
   for (i = 0, len = element.ownedElements.length; i < len; i++) {
     let elem = element.ownedElements[i];
     if (elem instanceof type.UMLEnumeration) {
       enumerations.push(elem);
     }
-  }
-
-  /**
-   * Return visibility
-   * @param {type.Model} elem
-   * @return {string}
-   */
-  function getVisibility(elem) {
-    switch (elem.visibility) {
-      case type.UMLModelElement.VK_PUBLIC:
-        return 'public';      
-      case type.UMLModelElement.VK_PROTECTED:
-        return 'protected';
-      case type.UMLModelElement.VK_PRIVATE:
-        return 'private';
-      default:
-        return null
-    }
-  }
-
-  /**
-   *  Return type expression
-   *  @param {type.Model} elem
-   *  @param {Array.<String>} imports Used to collect import declarations
-   *  @return {string}
-   */
-  function getType(elem) {
-    let _type = 'not found';
-
-    // type name
-    if (elem instanceof type.UMLAttribute) {
-      if ((typeof elem.type === 'string') && elem.type.length > 0) {
-      _type = elem.type;
-      }
-    } else if (elem instanceof type.UMLOperation) {
-      if (element.name === elem.name) {
-        _type = 'constructor';
-      } else {
-        let return_parameter = elem.getReturnParameter();
-        _type = return_parameter.type;
-      }
-    }
-    return _type;
-  }
-
-    /** TODO: Test it
-   * Collect modifiers of a given element.
-   * @param {type.Model} elem
-   * @return {Array.<string>}
-   */
-  function getModifiers (elem) {
-    let modifiers = [];
-    let visibility = this.getVisibility(elem);
-    if (visibility) {
-      modifiers.push(visibility);
-    }
-    if (elem.isStatic === true) {
-      modifiers.push('static');
-    }
-    if (elem.isAbstract === true) {
-      modifiers.push('abstract');
-    }
-    if (elem.isFinalSpecialization === true || elem.isLeaf === true) {
-      modifiers.push('final');
-    }
-    if (elem.concurrency === type.UMLBehavioralFeature.CCK_CONCURRENT) {
-      modifiers.push('synchronized');
-    }
-    // transient
-    // strictfp
-    // const
-    // native
-    return modifiers;
-  }
-
-  /**
-   * create declaration for attribute
-   * @param {type.Model} attr
-   * @return {string}
-   */
-  function declareAttribute(attr) {
-    let declaration = [];
-    declaration.push(getType(attr) + ' ' + attr.name + ';');
-    return declaration;
-  }
-
-  /**
-   * create declaration for method
-   * @param {type.Model} method
-   * @return {string}
-   */
-  function declareMethod(method) {
-    let declaration = [];
-    if (getType(method) === 'constructor') {
-      declaration.push(method.name); 
-    } else {
-      declaration.push(getType(method) + ' ' + method.name);
-    }
-
-    declaration.push('(');
-    declaration.push(declareParameters(method));
-    declaration.push(');');
-
-    return declaration.join('')
-  }
-
-  /**
-   * list method parameters for declaration
-   * @param {type.Model} method
-   * @return {string}
-   */
-  function declareParameters(method) {
-    let declaration = [];
-    let parameters = method.getNonReturnParameters();
-    for (i = 0; i < parameters.length; i++) {
-      if(parameters[i].type instanceof type.UMLEnumeration) {
-        declaration.push(parameters[i].type.name + ' ' + parameters[i].name);
-      } else {
-        declaration.push(parameters[i].type + ' ' + parameters[i].name);
-      }
-    }
-    return declaration.join(', ');
-  }
-
-  /**
-   * declare element of the same visibility
-   * @return {string}
-   */
-  function declareElements(visibility) {
-    let declaration = '';
-    declaration = Attributes(visibility);
-    return declaration;
-  }
-
-  /**
-   * create declaration for enumeration
-   * @param {type.Model} enumeration
-   * @return {string}
-   */
-  function declareEnumeration(enumeration) {
-    let declaration = [];
-    declaration.push('enum ' + enumeration.name);
-    declaration.push('{');
-    declaration.push(declareEnumerationLiterals(enumeration));
-    declaration.push('};');
-    return declaration.join('\n\t');
-  }
-
-  /**
-   * list enumeration literals for declaration
-   * @param {type.Model} enumeration
-   * @return {string}
-   */
-  function declareEnumerationLiterals(enumeration) {
-    let declaration = [];
-    let literals = enumeration.literals;
-    for (i = 0; i < literals.length; i++) {
-      declaration.push(literals[i].name);
-    }
-    return declaration.join(', ');
-  }
-
-  /**
-   * declare all attributes with the same type of visibility
-   * @param {string} visibility
-   * @return {string}
-   */
-  function Attributes(visibility) {
-    let declaration = [];
-    let declaration_index = 0;
-
-    attributes.forEach((attr, index, array) =>
-    {
-      if (getVisibility(attr) == visibility) {
-        declaration[declaration_index] = declareAttribute(attr);
-        declaration_index++;
-      }
-    })
-    declaration.push('\n\t');
-
-    return declaration.join('\n\t');
-  }
-
-  /**
-   * declare all methods with the same type of visibility
-   * @param {string} visibility
-   * @return {string array}
-   */
-   function Methods(visibility) {
-    let declaration = [];
-    let declaration_index = 0;
-
-    methods.forEach((method, index, array) => 
-    {
-      if (getVisibility(method) == visibility) {
-        declaration[declaration_index] = declareMethod(method);
-        declaration_index++;
-      }
-    });
-    declaration.push('\n\t');
-
-    return declaration.join('\n\t');
-  }
-
-  /**
-   * declare all enumerations with the same type of visibility
-   * @param {string} visibility
-   * @return {string array}
-   */
-  function Enumerations(visibility) {
-    let declaration = [];
-    let declaration_index = 0;
-
-    enumerations.forEach((enumeration, index, array) => 
-    {
-      if (getVisibility(enumeration) == visibility) {
-        declaration[declaration_index] = declareEnumeration(enumeration);
-        declaration_index++;
-      }
-    });
-    declaration.push('\n\t');
-
-    return declaration.join('\n\t');
   }
 -%>
 <%# Header guard start -%>
@@ -246,11 +28,11 @@
 
 <%# Class declaration -%>
 class <%=element.name%><%=_extends%> {
-<%= 'public:\n\t' + Attributes('public') + Enumerations('public') + Methods('public')-%>
+<%= 'public:\n\t' + Attributes('public', attributes) + Enumerations('public', enumerations) + Methods('public', methods)-%>
 
-<%= 'protected:\n\t' + Attributes('protected') + Enumerations('protected') + Methods('protected')-%>
+<%= 'protected:\n\t' + Attributes('protected', attributes) + Enumerations('protected', enumerations) + Methods('protected', methods)-%>
 
-<%= 'private:\n\t' + Attributes('private') + Enumerations('private') + Methods('private')-%>
+<%= 'private:\n\t' + Attributes('private', attributes) + Enumerations('private', enumerations) + Methods('private', methods)-%>
 };
 
 <%# Header guard end -%>
