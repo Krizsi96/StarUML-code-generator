@@ -40,7 +40,7 @@ function CollectUMLDependencies(UMLelement) {
   let dependencies = [];
   UMLelement.ownedElements.forEach((elementUnderCheck) => {
     if (elementUnderCheck instanceof type.UMLDependency && !(elementUnderCheck instanceof type.UMLInterfaceRealization)) 
-      dependencies.push(elementUnderCheck.target.name);
+      dependencies.push(elementUnderCheck);
   });
   return dependencies;
 }
@@ -88,7 +88,10 @@ class Header {
     });
 
     this.dependencies.forEach((dependency) => {
-      this.includeDeclaration.push('#include "' + dependency + '.hpp"');
+      if (dependency.target.stereotype == 'standard')
+      this.includeDeclaration.push('#include <' + dependency.target.name + '.h>');
+      else
+      this.includeDeclaration.push('#include "' + dependency.target.name + '.hpp"');
     });
   }
 
