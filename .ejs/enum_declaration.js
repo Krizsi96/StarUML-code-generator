@@ -49,3 +49,16 @@ function Enumerations(visibility, enumerations) {
 }
 
 exports.Enumerations = Enumerations;
+
+function collectUMLEnumerations(UMLelement) {
+  let enumerations = [];
+  for (i = 0, length = UMLelement.ownedElements.length; i < length; i++) {
+    let elementUnderCheck = UMLelement.ownedElements[i];
+    if (elementUnderCheck instanceof type.UMLEnumeration) {
+      enumerations.push(elementUnderCheck);
+    }
+  }
+  return enumerations;
+}
+
+exports.collectUMLEnumerations = collectUMLEnumerations;

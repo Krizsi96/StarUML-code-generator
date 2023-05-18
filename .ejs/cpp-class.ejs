@@ -9,15 +9,10 @@
 
   const {getVisibility, getModifiers, getType} = require('E:\\Projects\\UML_code_generator\\.ejs\\get_functions.js');
   const {Methods} = require('E:\\Projects\\UML_code_generator\\.ejs\\method_declaration.js');
-  const {Enumerations} = require('E:\\Projects\\UML_code_generator\\.ejs\\enum_declaration.js');
+  const {Enumerations, collectUMLEnumerations} = require('E:\\Projects\\UML_code_generator\\.ejs\\enum_declaration.js');
   const {Attributes} = require('E:\\Projects\\UML_code_generator\\.ejs\\attribute_declaration.js');
 
-  for (i = 0, len = element.ownedElements.length; i < len; i++) {
-    let elem = element.ownedElements[i];
-    if (elem instanceof type.UMLEnumeration) {
-      enumerations.push(elem);
-    }
-  }
+  enumerations = collectUMLEnumerations(element);
 -%>
 <%# Header guard start -%>
 #ifndef _<%=element.name.toUpperCase()%>_H_
