@@ -42,8 +42,11 @@ function declareMethod(method) {
   declaration.push(declareParameters(method));
   if (method.isAbstract === true)
     declaration.push(') = 0;');
-  else
-    declaration.push(');');
+  else {
+    declaration.push(')');
+    declaration.push(' ' + method.specification);
+    declaration.push(';');
+  }
   return declaration.join('')
 }
 
