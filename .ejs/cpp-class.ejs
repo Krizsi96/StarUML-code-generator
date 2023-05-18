@@ -1,6 +1,10 @@
 <%
   const { CodeGenerator, CreateLogFile } = require('E:\\Projects\\UML_code_generator\\.ejs\\code-generator.js');
   let header = CodeGenerator(element);
+
+  let publicElements = header.WritePublicElements();
+  let protectedElements = header.WriteProtectedElements();
+  let privateElements = header.WritePrivateElements();
 -%>
 <%# Header guard start -%>
 #ifndef <%=header.WriteHeaderGuard()%>
@@ -10,9 +14,11 @@
 
 <%# Class declaration -%>
 class <%=header.WriteName()%><%=header.WriteInheritance()%> {
-<%= 'public:\n\t' + header.WritePublicElements()-%>
-<%= 'protected:\n\t' + header.WriteProtectedElements()-%>
-<%= 'private:\n\t' + header.WritePrivateElements()-%>
+<%= publicElements != '' ? 'public:\n\t' + publicElements : ""-%>
+
+<%= protectedElements != '' ? 'protected:\n\t' + protectedElements : ""-%>
+
+<%= privateElements != '' ? 'private:\n\t' + privateElements : ""-%>
 };
 
 <%# Header guard end -%>

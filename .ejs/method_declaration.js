@@ -12,7 +12,6 @@ function Methods(visibility, methods) {
     if (getVisibility(method) == visibility)
       declaration.push(declareMethod(method));
   });
-  declaration.push('\n\t');
   return declaration.join('\n\t');
 }
 exports.Methods = Methods;

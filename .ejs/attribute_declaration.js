@@ -11,7 +11,6 @@ function Attributes(visibility, attributes) {
     if (getVisibility(attribute) == visibility)
       declaration.push(declareAttribute(attribute));
   })
-  declaration.push('\n\t');
   return declaration.join('\n\t');
 }
 exports.Attributes = Attributes;

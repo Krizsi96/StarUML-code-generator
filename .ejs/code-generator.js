@@ -157,11 +157,16 @@ class Header {
   WriteElementsOfSameVisibility(visibility) {
     this.log.push('>> writeElementsOfSameVisibility called with visibility: ' + visibility);
     let elementDeclarations = [];
+    let returnValue = '';
     elementDeclarations.push(this.WriteAttributesOfSameVisibility(visibility));
     elementDeclarations.push(this.WriteEnumerationsOfSameVisibility(visibility));
     elementDeclarations.push(this.WriteOperationsOfSameVisibility(visibility));
     this.log.push('>> elementDeclarations: ' + elementDeclarations);
-    return elementDeclarations.join('\n\t');
+    elementDeclarations.forEach((elementDeclaration) => {
+      if (elementDeclaration != '')
+        returnValue = returnValue + elementDeclaration + '\n\t';
+    });
+    return returnValue;
   }
 
   WriteAttributesOfSameVisibility(visibility) {

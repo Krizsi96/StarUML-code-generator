@@ -22,7 +22,6 @@ function Enumerations(visibility, enumerations) {
     if (getVisibility(enumeration) == visibility)
       declaration.push(declareEnumeration(enumeration));
   });
-  declaration.push('\n\t');
   return declaration.join('\n\t');
 }
 exports.Enumerations = Enumerations;
