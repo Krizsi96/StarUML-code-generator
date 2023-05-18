@@ -1,36 +1,26 @@
 <%
-  const _supers = element.getGeneralElements();
-  const _extends = _supers.length > 0 ? ': public ' + _supers[0].name : '';
-
-  let attributes = element.attributes;
-  let methods = element.operations;
-  let enumerations = [];
-  let log = [];
-
   const {getVisibility, getModifiers, getType} = require('E:\\Projects\\UML_code_generator\\.ejs\\get_functions.js');
   const {Methods} = require('E:\\Projects\\UML_code_generator\\.ejs\\method_declaration.js');
   const {Enumerations, collectUMLEnumerations} = require('E:\\Projects\\UML_code_generator\\.ejs\\enum_declaration.js');
   const {Attributes} = require('E:\\Projects\\UML_code_generator\\.ejs\\attribute_declaration.js');
   const { CodeGenerator } = require('E:\\Projects\\UML_code_generator\\.ejs\\code-generator.js');
 
-  CodeGenerator(element);
-
-  enumerations = collectUMLEnumerations(element);
+  var header = CodeGenerator(element);
 -%>
 <%# Header guard start -%>
 #ifndef _<%=element.name.toUpperCase()%>_H_
 #define _<%=element.name.toUpperCase()%>_H_
 
 <%# Include headers -%>
-<%-_supers.length > 0 ?  `#include "` + _supers[0].name + '.h"' : '';%>
+<%-header.supers.length > 0 ?  `#include "` + header.supers[0].name + '.h"' : '';%>
 
 <%# Class declaration -%>
-class <%=element.name%><%=_extends%> {
-<%= 'public:\n\t' + Attributes('public', attributes) + Enumerations('public', enumerations) + Methods('public', methods)-%>
+class <%=element.name%><%=header.extends%> {
+<%= 'public:\n\t' + Attributes('public', header.attributes) + Enumerations('public', header.enumerations) + Methods('public', header.methods)-%>
 
-<%= 'protected:\n\t' + Attributes('protected', attributes) + Enumerations('protected', enumerations) + Methods('protected', methods)-%>
+<%= 'protected:\n\t' + Attributes('protected', header.attributes) + Enumerations('protected', header.enumerations) + Methods('protected', header.methods)-%>
 
-<%= 'private:\n\t' + Attributes('private', attributes) + Enumerations('private', enumerations) + Methods('private', methods)-%>
+<%= 'private:\n\t' + Attributes('private', header.attributes) + Enumerations('private', header.enumerations) + Methods('private', header.methods)-%>
 };
 
 <%# Header guard end -%>
