@@ -1,7 +1,7 @@
 const { collectUMLEnumerations } = require('./enum_declaration.js');
 class Header {
   constructor() {
-    this.nameClass = '';
+    this.name = '';
     this.attributes = [];
     this.methods = [];
     this.enumerations = [];
@@ -13,8 +13,7 @@ class Header {
 
   CollectElements(UMLelement) { 
     this.log.push('CollectElements called');
-    this.nameClass = UMLelement.name;
-    this.log.push('name: ' + this.nameClass);
+    this.name = UMLelement.name;
     this.attributes = UMLelement.attributes;
     this.methods = UMLelement.methods;
     this.enumerations = collectUMLEnumerations(UMLelement);
@@ -42,11 +41,11 @@ class Header {
   }
 
   WriteName() {
-    return this.nameClass;
+    return this.name;
   }
 
   WriteHeaderGuard() {
-    return '_' + this.nameClass.toUpperCase() + '_HPP_';
+    return '_' + this.name.toUpperCase() + '_HPP_';
   }
 }
 
