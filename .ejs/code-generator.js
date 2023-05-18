@@ -5,7 +5,7 @@ class Header {
     this.attributes = [];
     this.methods = [];
     this.enumerations = [];
-    this.log = [''];
+    this.log = [];
     this.supers = [];
     this.inheritanceDeclaration = [''];
     this.includeDeclaration = [''];
