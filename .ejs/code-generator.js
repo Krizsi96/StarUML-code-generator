@@ -36,6 +36,15 @@ function CollectUMLInterfaceRealizations(UMLelement) {
   return interfaceRealizations;
 }
 
+function CollectUMLDependencies(UMLelement) {
+  let dependencies = [];
+  UMLelement.ownedElements.forEach((elementUnderCheck) => {
+    if (elementUnderCheck instanceof type.UMLDependency && !(elementUnderCheck instanceof type.UMLInterfaceRealization)) 
+      dependencies.push(elementUnderCheck.target.name);
+  });
+  return dependencies;
+}
+
 class Header {
   constructor() {
     this.name = '';
@@ -43,6 +52,7 @@ class Header {
     this.operations = [];
     this.enumerations = [];
     this.interfaceRealizations = [];
+    this.dependencies = [];
     this.log = [];
     this.supers = [];
     this.inheritanceDeclaration = [''];
@@ -57,6 +67,8 @@ class Header {
     this.enumerations = collectUMLEnumerations(UMLelement);
     this.interfaceRealizations = CollectUMLInterfaceRealizations(UMLelement);
     this.log.push('>> interfaceRealizations: ' + this.interfaceRealizations);
+    this.dependencies = CollectUMLDependencies(UMLelement);
+    this.log.push('>> dependencies: ' + this.dependencies);
     this.supers = UMLelement.getGeneralElements();
   }
 
@@ -73,6 +85,10 @@ class Header {
     // this.includeDeclaration = this.supers.length > 0 ? includeDeclaration.push('#include "' + this.supers[0].name + '.h"') : '';
     this.interfaceRealizations.forEach((interfaceRealization) => {
       this.includeDeclaration.push('#include "' + interfaceRealization + '.hpp"');
+    });
+
+    this.dependencies.forEach((dependency) => {
+      this.includeDeclaration.push('#include "' + dependency + '.hpp"');
     });
   }
 
