@@ -28,6 +28,8 @@ function declareMethod(method) {
   let declaration = [];
   if (getType(method) === 'constructor') {
     declaration.push(method.name);
+  } else if (getType(method) === 'destructor') {
+    declaration.push('~' + method.name);
   } else {
     declaration.push(getType(method) + ' ' + method.name);
   }

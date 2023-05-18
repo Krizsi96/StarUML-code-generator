@@ -67,7 +67,10 @@ function getType(elem) {
   } else if (elem instanceof type.UMLOperation) {
     let return_parameter = elem.getReturnParameter();
     if (return_parameter === null) {
+      if(elem.stereotype == 'constructor')
       _type = 'constructor';
+      else if (elem.stereotype == 'destructor')
+      _type = 'destructor';
     }
     else {
       _type = return_parameter.type;
