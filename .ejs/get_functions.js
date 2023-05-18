@@ -1,10 +1,10 @@
 /**
  * Return visibility
- * @param {type.Model} elem
+ * @param {type.Model} element
  * @return {string}
  */
-function getVisibility(elem) {
-  switch (elem.visibility) {
+function getVisibility(element) {
+  switch (element.visibility) {
     case type.UMLModelElement.VK_PUBLIC:
       return 'public';
     case type.UMLModelElement.VK_PROTECTED:
@@ -15,30 +15,29 @@ function getVisibility(elem) {
       return null
   }
 }
-
 exports.getVisibility = getVisibility;
 
 /** TODO: Test it
 * Collect modifiers of a given element.
-* @param {type.Model} elem
+* @param {type.Model} element
 * @return {Array.<string>}
 */
-function getModifiers(elem) {
+function getModifiers(element) {
   let modifiers = [];
-  let visibility = this.getVisibility(elem);
+  let visibility = this.getVisibility(element);
   if (visibility) {
     modifiers.push(visibility);
   }
-  if (elem.isStatic === true) {
+  if (element.isStatic === true) {
     modifiers.push('static');
   }
-  if (elem.isAbstract === true) {
+  if (element.isAbstract === true) {
     modifiers.push('abstract');
   }
-  if (elem.isFinalSpecialization === true || elem.isLeaf === true) {
+  if (element.isFinalSpecialization === true || element.isLeaf === true) {
     modifiers.push('final');
   }
-  if (elem.concurrency === type.UMLBehavioralFeature.CCK_CONCURRENT) {
+  if (element.concurrency === type.UMLBehavioralFeature.CCK_CONCURRENT) {
     modifiers.push('synchronized');
   }
   // transient
@@ -47,36 +46,43 @@ function getModifiers(elem) {
   // native
   return modifiers;
 }
-
 exports.getModifiers = getModifiers;
 
 /**
  *  Return type expression
- *  @param {type.Model} elem
+ *  @param {type.Model} element
  *  @param {Array.<String>} imports Used to collect import declarations
  *  @return {string}
  */
-function getType(elem) {
+function getType(element) {
   let _type = 'not found';
+  if (element instanceof type.UMLAttribute) {
+    _type = getTypeForAttribute(element);
+  } else if (element instanceof type.UMLOperation) {
+    _type = getTypeForOperation(element);
+  }
+  return _type;
+}
+exports.getType = getType;
 
-  // type name
-  if (elem instanceof type.UMLAttribute) {
-    if ((typeof elem.type === 'string') && elem.type.length > 0) {
-      _type = elem.type;
-    }
-  } else if (elem instanceof type.UMLOperation) {
-    let return_parameter = elem.getReturnParameter();
-    if (return_parameter === null) {
-      if(elem.stereotype == 'constructor')
-      _type = 'constructor';
-      else if (elem.stereotype == 'destructor')
-      _type = 'destructor';
-    }
-    else {
-      _type = return_parameter.type;
-    }
+function getTypeForOperation(operation) {
+  let _type = 'not found';
+  let return_parameter = operation.getReturnParameter();
+  if (return_parameter === null) {
+    if(operation.stereotype == 'constructor')
+    _type = 'constructor';
+    else if (operation.stereotype == 'destructor')
+    _type = 'destructor';
+  } else {
+    _type = return_parameter.type;
   }
   return _type;
 }
 
-exports.getType = getType;
+function getTypeForAttribute(attribute) {
+  let _type = 'not found';
+  if ((typeof attribute.type === 'string') && attribute.type.length > 0) {
+    _type = attribute.type;
+  }
+  return _type;
+}

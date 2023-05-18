@@ -2,6 +2,22 @@ const { getVisibility } = require('E:\\Projects\\UML_code_generator\\.ejs\\get_f
 const { getType } = require('E:\\Projects\\UML_code_generator\\.ejs\\get_functions.js')
 
 /**
+ * declare all methods with the same type of visibility
+ * @param {string} visibility
+ * @return {string array}
+ */
+function Methods(visibility, methods) {
+  let declaration = [];
+  methods.forEach((method) => {
+    if (getVisibility(method) == visibility)
+      declaration.push(declareMethod(method));
+  });
+  declaration.push('\n\t');
+  return declaration.join('\n\t');
+}
+exports.Methods = Methods;
+
+/**
  * list method parameters for declaration
  * @param {type.Model} method
  * @return {string}
@@ -9,13 +25,13 @@ const { getType } = require('E:\\Projects\\UML_code_generator\\.ejs\\get_functio
 function declareParameters(method) {
   let declaration = [];
   let parameters = method.getNonReturnParameters();
-  for (i = 0; i < parameters.length; i++) {
-    if (parameters[i].type instanceof type.UMLEnumeration) {
-      declaration.push(parameters[i].type.name + ' ' + parameters[i].name);
+  parameters.forEach((parameter) => {
+    if (parameter.type instanceof type.UMLEnumeration) {
+      declaration.push(parameter.type.name + ' ' + parameter.name);
     } else {
-      declaration.push(parameters[i].type + ' ' + parameters[i].name);
+      declaration.push(parameter.type + ' ' + parameter.name);
     }
-  }
+  })
   return declaration.join(', ');
 }
 
@@ -26,39 +42,19 @@ function declareParameters(method) {
  */
 function declareMethod(method) {
   let declaration = [];
-  if (getType(method) === 'constructor') {
-    declaration.push(method.name);
-  } else if (getType(method) === 'destructor') {
-    declaration.push('~' + method.name);
-  } else {
-    declaration.push(getType(method) + ' ' + method.name);
+  switch (getType(method)) {
+    case 'constructor':
+      declaration.push(method.name);
+      break;
+    case 'destructor':
+      declaration.push('~' + method.name);
+      break;
+    default:
+      declaration.push(getType(method) + ' ' + method.name);
+      break;
   }
-
   declaration.push('(');
   declaration.push(declareParameters(method));
   declaration.push(');');
-
   return declaration.join('')
 }
-
-/**
- * declare all methods with the same type of visibility
- * @param {string} visibility
- * @return {string array}
- */
-function Methods(visibility, methods) {
-  let declaration = [];
-  let declaration_index = 0;
-
-  methods.forEach((method, index, array) => {
-    if (getVisibility(method) == visibility) {
-      declaration[declaration_index] = declareMethod(method);
-      declaration_index++;
-    }
-  });
-  declaration.push('\n\t');
-
-  return declaration.join('\n\t');
-}
-
-exports.Methods = Methods;

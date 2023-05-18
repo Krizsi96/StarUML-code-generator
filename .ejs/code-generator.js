@@ -1,6 +1,16 @@
 const { collectUMLEnumerations, Enumerations } = require('./enum_declaration.js');
 const { Attributes } = require('./attribute_declaration.js');
 const { Methods } = require('./method_declaration.js');
+
+function CodeGenerator(UMLelement) {
+  const header = new Header();
+  header.log.push('>> CodeGenerator called');
+  header.CollectElements(UMLelement);
+  header.CreateInheritance();
+  header.CreateIncludes();
+  return header;
+}
+exports.CodeGenerator = CodeGenerator;
 class Header {
   constructor() {
     this.name = '';
@@ -105,14 +115,3 @@ class Header {
     return enumerationDeclarations;
   }
 }
-
-function CodeGenerator(UMLelement) {
-  const header = new Header();
-  header.log.push('>> CodeGenerator called');
-  header.CollectElements(UMLelement);
-  header.CreateInheritance();
-  header.CreateIncludes();
-  return header;
-}
-
-exports.CodeGenerator = CodeGenerator;

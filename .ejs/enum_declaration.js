@@ -1,5 +1,32 @@
 const { getVisibility } = require('E:\\Projects\\UML_code_generator\\.ejs\\get_functions.js')
 
+function collectUMLEnumerations(UMLelement) {
+  let enumerations = [];
+  UMLelement.ownedElements.forEach((elementUnderCheck) => {
+    if (elementUnderCheck instanceof type.UMLEnumeration) {
+      enumerations.push(elementUnderCheck);
+    }
+  })
+  return enumerations;
+}
+exports.collectUMLEnumerations = collectUMLEnumerations;
+
+/**
+ * declare all enumerations with the same type of visibility
+ * @param {string} visibility
+ * @return {string array}
+ */
+function Enumerations(visibility, enumerations) {
+  let declaration = [];
+  enumerations.forEach((enumeration) => {
+    if (getVisibility(enumeration) == visibility)
+      declaration.push(declareEnumeration(enumeration));
+  });
+  declaration.push('\n\t');
+  return declaration.join('\n\t');
+}
+exports.Enumerations = Enumerations;
+
 /**
    * create declaration for enumeration
    * @param {type.Model} enumeration
@@ -27,38 +54,3 @@ function declareEnumerationLiterals(enumeration) {
   }
   return declaration.join(', ');
 }
-
-/**
- * declare all enumerations with the same type of visibility
- * @param {string} visibility
- * @return {string array}
- */
-function Enumerations(visibility, enumerations) {
-  let declaration = [];
-  let declaration_index = 0;
-
-  enumerations.forEach((enumeration, index, array) => {
-    if (getVisibility(enumeration) == visibility) {
-      declaration[declaration_index] = declareEnumeration(enumeration);
-      declaration_index++;
-    }
-  });
-  declaration.push('\n\t');
-
-  return declaration.join('\n\t');
-}
-
-exports.Enumerations = Enumerations;
-
-function collectUMLEnumerations(UMLelement) {
-  let enumerations = [];
-  for (i = 0, length = UMLelement.ownedElements.length; i < length; i++) {
-    let elementUnderCheck = UMLelement.ownedElements[i];
-    if (elementUnderCheck instanceof type.UMLEnumeration) {
-      enumerations.push(elementUnderCheck);
-    }
-  }
-  return enumerations;
-}
-
-exports.collectUMLEnumerations = collectUMLEnumerations;
