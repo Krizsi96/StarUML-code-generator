@@ -45,6 +45,15 @@ function CollectUMLDependencies(UMLelement) {
   return dependencies;
 }
 
+function CollectUMLAssociations(UMLelement) {
+  let associations = [];
+  UMLelement.ownedElements.forEach((elementUnderCheck) => {
+    if (elementUnderCheck instanceof type.UMLAssociation) 
+      associations.push(elementUnderCheck.end1.reference.name);
+  });
+  return associations;
+}
+
 class Header {
   constructor() {
     this.name = '';
@@ -53,6 +62,7 @@ class Header {
     this.enumerations = [];
     this.interfaceRealizations = [];
     this.dependencies = [];
+    this.associations = [];
     this.log = [];
     this.supers = [];
     this.inheritanceDeclaration = [''];
@@ -69,6 +79,8 @@ class Header {
     this.log.push('>> interfaceRealizations: ' + this.interfaceRealizations);
     this.dependencies = CollectUMLDependencies(UMLelement);
     this.log.push('>> dependencies: ' + this.dependencies);
+    this.associations = CollectUMLAssociations(UMLelement);
+    this.log.push('>> associations: ' + this.associations);
     this.supers = UMLelement.getGeneralElements();
   }
 
@@ -92,6 +104,10 @@ class Header {
       this.includeDeclaration.push('#include <' + dependency.target.name + '.h>');
       else
       this.includeDeclaration.push('#include "' + dependency.target.name + '.hpp"');
+    });
+
+    this.associations.forEach((association) => {
+      this.includeDeclaration.push('#include "' + association + '.hpp"');
     });
   }
 
