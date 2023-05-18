@@ -1,27 +1,29 @@
 <%
-  const {getVisibility, getModifiers, getType} = require('E:\\Projects\\UML_code_generator\\.ejs\\get_functions.js');
-  const {Methods} = require('E:\\Projects\\UML_code_generator\\.ejs\\method_declaration.js');
-  const {Enumerations, collectUMLEnumerations} = require('E:\\Projects\\UML_code_generator\\.ejs\\enum_declaration.js');
-  const {Attributes} = require('E:\\Projects\\UML_code_generator\\.ejs\\attribute_declaration.js');
   const { CodeGenerator } = require('E:\\Projects\\UML_code_generator\\.ejs\\code-generator.js');
-
-  var header = CodeGenerator(element);
+  let header = CodeGenerator(element);
 -%>
 <%# Header guard start -%>
-#ifndef _<%=element.name.toUpperCase()%>_H_
-#define _<%=element.name.toUpperCase()%>_H_
+#ifndef <%=header.WriteHeaderGuard()%>
+#define <%=header.WriteHeaderGuard()%>
 
 <%# Include headers -%>
-<%-header.supers.length > 0 ?  `#include "` + header.supers[0].name + '.h"' : '';%>
+<%-header.WriteIncludes();%>
 
 <%# Class declaration -%>
-class <%=element.name%><%=header.extends%> {
-<%= 'public:\n\t' + Attributes('public', header.attributes) + Enumerations('public', header.enumerations) + Methods('public', header.methods)-%>
+class <%=header.WriteName()%><%=header.WriteInheritance()%> {
+<%#= 'public:\n\t' + Attributes('public', header.attributes) + Enumerations('public', header.enumerations)
+                  + Methods('public', header.methods)-%>
 
-<%= 'protected:\n\t' + Attributes('protected', header.attributes) + Enumerations('protected', header.enumerations) + Methods('protected', header.methods)-%>
+<%#= 'protected:\n\t' + Attributes('protected', header.attributes)
+                  + Enumerations('protected', header.enumerations) + Methods('protected', header.methods)-%>
 
-<%= 'private:\n\t' + Attributes('private', header.attributes) + Enumerations('private', header.enumerations) + Methods('private', header.methods)-%>
+<%#= 'private:\n\t' + Attributes('private', header.attributes) + Enumerations('private', header.enumerations)
+                  + Methods('private', header.methods)-%>
 };
 
 <%# Header guard end -%>
-#endif //_<%=element.name.toUpperCase()%>_H_
+#endif //<%=header.WriteHeaderGuard()%>
+
+/* LOG:
+  <%=header.log.join('\n')%>
+*/

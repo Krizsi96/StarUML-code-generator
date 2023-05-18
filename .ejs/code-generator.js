@@ -1,25 +1,61 @@
 const { collectUMLEnumerations } = require('./enum_declaration.js');
+class Header {
+  constructor() {
+    this.nameClass = '';
+    this.attributes = [];
+    this.methods = [];
+    this.enumerations = [];
+    this.log = [''];
+    this.supers = [];
+    this.inheritanceDeclaration = [''];
+    this.includeDeclaration = [''];
+  }
 
+  CollectElements(UMLelement) { 
+    this.log.push('CollectElements called');
+    this.nameClass = UMLelement.name;
+    this.log.push('name: ' + this.nameClass);
+    this.attributes = UMLelement.attributes;
+    this.methods = UMLelement.methods;
+    this.enumerations = collectUMLEnumerations(UMLelement);
+    this.supers = UMLelement.getGeneralElements();
+  }
+
+  CreateInheritance() {
+    this.log.push('CreateInheritance called');
+    this.inheritanceDeclaration = this.supers.length > 0 ? ': public ' + this.supers[0].name : '';
+  }
+
+  CreateIncludes() {
+    this.log.push('CreateIncludes called');
+    this.includeDeclaration = this.supers.length > 0 ? includeDeclaration.push('#include "' + this.supers[0].name + '.h"') : '';
+  }
+
+  WriteIncludes() {
+    this.log.push('writeIncludes called');
+    return this.includeDeclaration;
+  }
+
+  WriteInheritance() {
+    this.log.push('writeInheritance called');
+    return this.inheritanceDeclaration;
+  }
+
+  WriteName() {
+    return this.nameClass;
+  }
+
+  WriteHeaderGuard() {
+    return '_' + this.nameClass.toUpperCase() + '_HPP_';
+  }
+}
 
 function CodeGenerator(UMLelement) {
-  let header = {
-    CollectElements: function (UMLelement) {
-      attributes = UMLelement.attributes;
-      methods = UMLelement.methods;
-      enumerations = collectUMLEnumerations(UMLelement);
-    },
-    attributes: [],
-    methods: [],
-    enumerations: [],
-    log: [],
-    supers: [],
-    extends: '',
-  };
-
-  header.supers = UMLelement.getGeneralElements();
-  header.extends = header.supers.length > 0 ? ': public ' + header.supers[0].name : '';
-
+  const header = new Header();
+  header.log.push('CodeGenerator called');
   header.CollectElements(UMLelement);
+  header.CreateInheritance();
+  header.CreateIncludes();
   return header;
 }
 
