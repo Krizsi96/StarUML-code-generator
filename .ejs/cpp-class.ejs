@@ -11,6 +11,9 @@
   const {Methods} = require('E:\\Projects\\UML_code_generator\\.ejs\\method_declaration.js');
   const {Enumerations, collectUMLEnumerations} = require('E:\\Projects\\UML_code_generator\\.ejs\\enum_declaration.js');
   const {Attributes} = require('E:\\Projects\\UML_code_generator\\.ejs\\attribute_declaration.js');
+  const { CodeGenerator } = require('E:\\Projects\\UML_code_generator\\.ejs\\code-generator.js');
+
+  CodeGenerator(element);
 
   enumerations = collectUMLEnumerations(element);
 -%>
