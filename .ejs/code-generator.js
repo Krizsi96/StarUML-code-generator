@@ -108,7 +108,7 @@ class Header {
 
   WriteName() {
     let name = this.name;
-    if (true)
+    if (this.supers.length > 0 || this.interfaceRealizations.length > 0)
       name = name + ' : ';
     return name;
   }
