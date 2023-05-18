@@ -26,12 +26,23 @@ function CreateLogFolder() {
   if (!fs.existsSync(logFolderPath))
     fs.mkdirSync(logFolderPath);
 }
+
+function CollectUMLInterfaceRealizations(UMLelement) {
+  let interfaceRealizations = []; 
+  UMLelement.ownedElements.forEach((elementUnderCheck) => {
+    if (elementUnderCheck instanceof type.UMLInterfaceRealization) 
+      interfaceRealizations.push(elementUnderCheck.target.name);
+  });
+  return interfaceRealizations;
+}
+
 class Header {
   constructor() {
     this.name = '';
     this.attributes = [];
     this.operations = [];
     this.enumerations = [];
+    this.interfaceRealizations = [];
     this.log = [];
     this.supers = [];
     this.inheritanceDeclaration = [''];
@@ -44,31 +55,43 @@ class Header {
     this.attributes = UMLelement.attributes;
     this.operations = UMLelement.operations;
     this.enumerations = collectUMLEnumerations(UMLelement);
+    this.interfaceRealizations = CollectUMLInterfaceRealizations(UMLelement);
+    this.log.push('>> interfaceRealizations: ' + this.interfaceRealizations);
     this.supers = UMLelement.getGeneralElements();
   }
 
   CreateInheritance() {
     this.log.push('>> CreateInheritance called');
-    this.inheritanceDeclaration = this.supers.length > 0 ? ': public ' + this.supers[0].name : '';
+    // this.inheritanceDeclaration = this.supers.length > 0 ? ': public ' + this.supers[0].name : '';
+    this.interfaceRealizations.forEach((interfaceRealization) => { 
+      this.inheritanceDeclaration.push('public ' + interfaceRealization);
+    });
   }
 
   CreateIncludes() {
     this.log.push('>> CreateIncludes called');
-    this.includeDeclaration = this.supers.length > 0 ? includeDeclaration.push('#include "' + this.supers[0].name + '.h"') : '';
+    // this.includeDeclaration = this.supers.length > 0 ? includeDeclaration.push('#include "' + this.supers[0].name + '.h"') : '';
+    this.interfaceRealizations.forEach((interfaceRealization) => {
+      this.includeDeclaration.push('#include "' + interfaceRealization + '.hpp"');
+    });
   }
 
   WriteIncludes() {
     this.log.push('>> writeIncludes called');
-    return this.includeDeclaration;
+    return this.includeDeclaration.join('\n');
   }
 
   WriteInheritance() {
     this.log.push('>> writeInheritance called');
-    return this.inheritanceDeclaration;
+    this.inheritanceDeclaration.shift();
+    return this.inheritanceDeclaration.join(', ');
   }
 
   WriteName() {
-    return this.name;
+    let name = this.name;
+    if (true)
+      name = name + ' : ';
+    return name;
   }
 
   WriteHeaderGuard() {
