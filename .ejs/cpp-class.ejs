@@ -1,5 +1,5 @@
 <%
-  const { CodeGenerator } = require('E:\\Projects\\UML_code_generator\\.ejs\\code-generator.js');
+  const { CodeGenerator, CreateLogFile } = require('E:\\Projects\\UML_code_generator\\.ejs\\code-generator.js');
   let header = CodeGenerator(element);
 -%>
 <%# Header guard start -%>
@@ -18,7 +18,4 @@ class <%=header.WriteName()%><%=header.WriteInheritance()%> {
 
 <%# Header guard end -%>
 #endif //<%=header.WriteHeaderGuard()%>
-
-/* LOG:
-  <%-header.log.join('\n')%>
-*/
+<%CreateLogFile(header)-%>

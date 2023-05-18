@@ -1,16 +1,31 @@
 const { collectUMLEnumerations, Enumerations } = require('./enum_declaration.js');
 const { Attributes } = require('./attribute_declaration.js');
 const { Methods } = require('./method_declaration.js');
+const fs = require('fs');
 
 function CodeGenerator(UMLelement) {
   const header = new Header();
   header.log.push('>> CodeGenerator called');
+  CreateLogFolder();
   header.CollectElements(UMLelement);
   header.CreateInheritance();
   header.CreateIncludes();
   return header;
 }
 exports.CodeGenerator = CodeGenerator;
+
+const logFolderPath = 'E:\\Projects\\UML_code_generator\\.log\\';
+
+function CreateLogFile(header) {
+  const json = JSON.stringify(header.log);
+  fs.writeFileSync(logFolderPath + header.name + '_code_generation_log.json', json);
+}
+exports.CreateLogFile = CreateLogFile;
+
+function CreateLogFolder() {
+  if (!fs.existsSync(logFolderPath))
+    fs.mkdirSync(logFolderPath);
+}
 class Header {
   constructor() {
     this.name = '';
