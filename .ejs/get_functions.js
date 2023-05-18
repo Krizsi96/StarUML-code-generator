@@ -83,6 +83,8 @@ function getTypeForAttribute(attribute) {
   let _type = 'not found';
   if ((typeof attribute.type === 'string') && attribute.type.length > 0) {
     _type = attribute.type;
+  } else if ((typeof attribute.type.name === 'string') && attribute.type.name.length > 0) {
+    _type = attribute.type.name;
   }
   return _type;
 }
