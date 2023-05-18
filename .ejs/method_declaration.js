@@ -18,6 +18,36 @@ function Methods(visibility, methods) {
 exports.Methods = Methods;
 
 /**
+ * create declaration for method
+ * @param {type.Model} method
+ * @return {string}
+ */
+function declareMethod(method) {
+  let declaration = [];
+  if (method.isAbstract === true) {
+    declaration.push('virtual ');
+  }
+  switch (getType(method)) {
+    case 'constructor':
+      declaration.push(method.name);
+      break;
+    case 'destructor':
+      declaration.push('~' + method.name);
+      break;
+    default:
+      declaration.push(getType(method) + ' ' + method.name);
+      break;
+  }
+  declaration.push('(');
+  declaration.push(declareParameters(method));
+  if (method.isAbstract === true)
+    declaration.push(') = 0;');
+  else
+    declaration.push(');');
+  return declaration.join('')
+}
+
+/**
  * list method parameters for declaration
  * @param {type.Model} method
  * @return {string}
@@ -33,28 +63,4 @@ function declareParameters(method) {
     }
   })
   return declaration.join(', ');
-}
-
-/**
- * create declaration for method
- * @param {type.Model} method
- * @return {string}
- */
-function declareMethod(method) {
-  let declaration = [];
-  switch (getType(method)) {
-    case 'constructor':
-      declaration.push(method.name);
-      break;
-    case 'destructor':
-      declaration.push('~' + method.name);
-      break;
-    default:
-      declaration.push(getType(method) + ' ' + method.name);
-      break;
-  }
-  declaration.push('(');
-  declaration.push(declareParameters(method));
-  declaration.push(');');
-  return declaration.join('')
 }
