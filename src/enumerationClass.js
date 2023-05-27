@@ -23,7 +23,7 @@ class Enumeration {
         declaration.push('{');
         declaration.push('\t'+ this.literals.join(', '));
         declaration.push('};');
-        return declaration.join('\n');
+        return declaration.join('\n\t');
     }
 
     /**
