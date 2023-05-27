@@ -24,19 +24,20 @@ class Operation {
         }
         switch (this.returnType) {
             case 'constructor':
-                declaration = declareConstructor(this);
+                declaration.push(declareConstructor(this));
                 break;
             case 'destructor':
-                declaration = declareDestructor(this);
+                declaration.push(declareDestructor(this));
                 break;
             default:
-                declaration = declareStandardOperation(this);
+                declaration.push(declareStandardOperation(this));
                 break;
         }
         if (this.isAbstract === true)
             declaration.push(' = 0');
-        else if(this.specification != null)
-        declaration.push(' ' + this.specification);
+        else if (this.specification != undefined) {
+            declaration.push(' ' + this.specification);
+        }
 
         declaration.push(';');
         return declaration.join('')
@@ -154,5 +155,5 @@ function declareStandardOperation(Operation) {
     declaration.push('(');
     declaration.push(declareParameters(Operation));
     declaration.push(')');
-    return declaration;
+    return declaration.join('');
 }
