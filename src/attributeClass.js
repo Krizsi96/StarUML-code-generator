@@ -14,10 +14,19 @@ class Attribute {
      * @returns {string} declaration of attribute
      */
     getDeclaration() {
+        this.log.push('>> getDeclaration called for attribute: ' + this.name);
         return this.type + ' ' + this.name + ';';
+    }
+
+    /**
+     * get log of running enumeration methods
+     * @returns {string} log of enumeration
+     */
+    getLog() {
+        return this.log.join('\n');
     }
 }
 
-module.exports =  {
+module.exports = {
     Attribute: Attribute
 };
