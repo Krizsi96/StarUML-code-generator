@@ -25,7 +25,7 @@ describe('Enumeration Handling Tests', function () {
     describe('When getDeclaration is called on "TestUMLEnumeration"', function () {
         it('should return declaration for enumeration: ' + TestUMLEnumeration.name, function () {
             const testEnumeration = new myEnumeration.Enumeration(TestUMLEnumeration);
-            let expectedDeclaration = 'enum ' + TestUMLEnumeration.name + '\n{\n\tkInfo, kWarning, kError, kDebug\n};';
+            let expectedDeclaration = 'enum ' + TestUMLEnumeration.name + '\n\t{\n\t\tkInfo, kWarning, kError, kDebug\n\t};';
             assert.equal(testEnumeration.getDeclaration(), expectedDeclaration);
         });
     });
