@@ -7,6 +7,7 @@ class Header {
         this.name = UMLClass.name;
         this.attributes = CollectUMLAttributes(UMLClass);
         this.operations = CollectUMLOperations(UMLClass);
+        this.enumerations = collectUMLEnumerations(UMLClass);
         this.log = [];
     }
 }
@@ -55,8 +56,8 @@ function collectUMLEnumerations(UMLelement) {
     let enumerations = [];
     if (UMLelement.ownedElements != undefined) {
         UMLelement.ownedElements.forEach((elementUnderCheck) => {
-            if (elementUnderCheck instanceof type.UMLEnumeration) {
-                enumerations.push(elementUnderCheck);
+            if (elementUnderCheck._type == "UMLEnumeration") {
+                enumerations.push(new myEnumeration.Enumeration(elementUnderCheck));
             }
         })
     }
