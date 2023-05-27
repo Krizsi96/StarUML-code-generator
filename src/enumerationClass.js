@@ -29,7 +29,7 @@ class Enumeration {
     /**
      * get log of running enumeration methods
      * @returns {string} log of enumeration
-     * */
+     */
     getLog() {
         return this.log.join('\n');
     }
