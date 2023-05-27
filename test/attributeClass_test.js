@@ -1,56 +1,35 @@
 const assert = require('assert');
 const myAttribute = require('../src/attributeClass.js');
-
-const VK_PUBLIC = 'public';
-const VK_PROTECTED = 'protected';
-const VK_PRIVATE = 'private';
-
-type = {
-    UMLModelElement: [
-        VK_PUBLIC,
-        VK_PROTECTED,
-        VK_PRIVATE
-    ]
-}
-
-UMLAttributeTest = {
-    _type: "UMLAttribute",
-    _id: "AAAAAAGIFeyfNd/nV44=",
-    _parent: {
-        "$ref": "AAAAAAGHfGkeHtiig5w="
-    },
-    name: "Time_",
-    visibility: type.UMLModelElement.VK_PUBLIC,
-    type: "TimeInterface*"
-};
+const testData = require('./testData.js');
+const TestUMLAttribute = testData.TestUMLAttribute;
 
 describe('Attribute Tests', function () {
     describe('constructor Tests', function () {
         it('should construct attribute with the right name', function () {
-            const testAttribute = new myAttribute.Attribute(UMLAttributeTest);
-            assert.equal(testAttribute.name, UMLAttributeTest.name);
+            const testAttribute = new myAttribute.Attribute(TestUMLAttribute);
+            assert.equal(testAttribute.name, TestUMLAttribute.name);
         });
         it('should construct attribute with the right type', function () {
-            const testAttribute = new myAttribute.Attribute(UMLAttributeTest);
-            assert.equal(testAttribute.type, UMLAttributeTest.type);
+            const testAttribute = new myAttribute.Attribute(TestUMLAttribute);
+            assert.equal(testAttribute.type, TestUMLAttribute.type);
         });
         it('should construct attribute with the right visibility', function () {
-            const testAttribute = new myAttribute.Attribute(UMLAttributeTest);
+            const testAttribute = new myAttribute.Attribute(TestUMLAttribute);
             assert.equal(testAttribute.visibility, 'public');
         });
     });
     describe('getDeclaration Tests', function () {
         it('should return declaration for attribute', function () {
-            const testAttribute = new myAttribute.Attribute(UMLAttributeTest);
-            assert.equal(testAttribute.getDeclaration(), UMLAttributeTest.type + ' ' + UMLAttributeTest.name + ';');
+            const testAttribute = new myAttribute.Attribute(TestUMLAttribute);
+            assert.equal(testAttribute.getDeclaration(), TestUMLAttribute.type + ' ' + TestUMLAttribute.name + ';');
         });
     });
 
     describe('getLog Tests', function () {
         it('should return log for attribute', function () {
-            const testAttribute = new myAttribute.Attribute(UMLAttributeTest);
+            const testAttribute = new myAttribute.Attribute(TestUMLAttribute);
             testAttribute.getDeclaration();
-            assert.equal(testAttribute.getLog(), '>> Attribute created: ' + UMLAttributeTest.name + '\n>> getDeclaration called for attribute: ' + UMLAttributeTest.name);
+            assert.equal(testAttribute.getLog(), '>> Attribute created: ' + TestUMLAttribute.name + '\n>> getDeclaration called for attribute: ' + TestUMLAttribute.name);
         });
     });
 });
