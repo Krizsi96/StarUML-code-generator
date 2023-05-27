@@ -1,3 +1,5 @@
+const Attribute = require('./attributeClass.js');
+
 class Header {
     constructor() {
         this.name = '';
@@ -13,17 +15,4 @@ class Header {
     }
 }
 
-class Attribute {
-    constructor(name, type, visibility) {
-        this.name = name;
-        this.type = type;
-        this.visibility = visibility;
-    }
-
-    getDeclaration() {
-        return this.type + ' ' + this.name + ';';
-    }
-}
-module.exports = {
-    Header: Header
-};
+module.exports = Header;
