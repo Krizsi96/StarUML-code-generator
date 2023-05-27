@@ -3,17 +3,17 @@ const myEnumeration = require('../src/enumerationClass.js');
 const testData = require('./testData.js');
 const TestUMLEnumeration = testData.TestUMLEnumeration;
 
-describe('Enumeration Tests', function () {
-    describe('Constructor Tests', function () {
-        it('should construct enumeration with the right name', function () {
+describe('Enumeration Handling Tests', function () {
+    describe('When the contructor is called with "TestUMLEnumeration"', function () {
+        it('should construct enumeration with name: ' + TestUMLEnumeration.name, function () {
             const testEnumeration = new myEnumeration.Enumeration(TestUMLEnumeration);
             assert.equal(testEnumeration.name, 'kLogType');
         });
-        it('should construct enumeration with the right visibility', function () {
+        it('should construct enumeration with visibility: public', function () {
             const testEnumeration = new myEnumeration.Enumeration(TestUMLEnumeration);
             assert.equal(testEnumeration.visibility, 'public');
         });
-        it('should construct enumeration with the right literals', function () {
+        it('should construct enumeration with literals', function () {
             const testEnumeration = new myEnumeration.Enumeration(TestUMLEnumeration);
             assert.equal(testEnumeration.literals[0], 'kInfo');
             assert.equal(testEnumeration.literals[1], 'kWarning');
@@ -22,16 +22,16 @@ describe('Enumeration Tests', function () {
         });
     });
 
-    describe('getDeclaration Tests', function () {
-        it('should return declaration for enumeration', function () {
+    describe('When getDeclaration is called on "TestUMLEnumeration"', function () {
+        it('should return declaration for enumeration: ' + TestUMLEnumeration.name, function () {
             const testEnumeration = new myEnumeration.Enumeration(TestUMLEnumeration);
             let expectedDeclaration = 'enum ' + TestUMLEnumeration.name + '\n{\n\tkInfo, kWarning, kError, kDebug\n};';
             assert.equal(testEnumeration.getDeclaration(), expectedDeclaration);
         });
     });
 
-    describe('getLog Tests', function () {
-        it('should return log for enumeration', function () {
+    describe('When getLog is called after creating and make declaration for "TestUMLEnumeration', function () {
+        it('should return log for enumeration: ' + TestUMLEnumeration.name, function () {
             const testEnumeration = new myEnumeration.Enumeration(TestUMLEnumeration);
             testEnumeration.getDeclaration();
             let expectedLog = '>> Enumeration created: ' + TestUMLEnumeration.name + '\n>> getDeclaration called for enumeration: ' + TestUMLEnumeration.name;
