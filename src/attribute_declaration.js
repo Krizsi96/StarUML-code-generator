@@ -1,4 +1,4 @@
-const { getVisibility, getType} = require('/home/krizsi90/Documents/Projects/UML_code_generator/.ejs/get_functions.js')
+const { getVisibility, getType} = require('./get_functions.js')
 
 /**
  * declare all attributes with the same type of visibility
