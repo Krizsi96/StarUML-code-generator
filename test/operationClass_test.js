@@ -38,4 +38,13 @@ describe('Operation Handling Tests', function () {
             assert.equal(testOperation.getDeclaration(), expectedDeclaration);
         });
     });
+
+    describe('When getLog is called after creating and make declaration for "TestUMLOperationWithEnumParameter', function () {  
+        it('should return log for operation: ' + TestUMLOperationWithEnumParameter.name, function () {
+            const testOperation = new myOperation.Operation(TestUMLOperationWithEnumParameter);
+            testOperation.getDeclaration();
+            let expectedLog = '>> Operation created: ' + TestUMLOperationWithEnumParameter.name + '\n>> getDeclaration called for operation: ' + TestUMLOperationWithEnumParameter.name;
+            assert.equal(testOperation.getLog(), expectedLog);
+        });
+    });
 });

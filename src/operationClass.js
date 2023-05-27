@@ -41,6 +41,14 @@ class Operation {
         declaration.push(';');
         return declaration.join('')
     }
+
+    /**
+     * create log of running operation methods
+     * @returns {string} log of operation
+     */
+    getLog() {
+        return this.log.join('\n');
+    }
 }
 
 module.exports = {
