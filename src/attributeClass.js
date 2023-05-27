@@ -1,9 +1,12 @@
+const { getVisibility } = require('./get_functions.js')
+
 class Attribute {
-    constructor(name, type, visibility) {
-        this.name = name;
-        this.type = type;
-        this.visibility = visibility;
+    constructor(UMLAttribute) {
+        this.name = UMLAttribute.name;
+        this.type = UMLAttribute.type;
+        this.visibility = getVisibility(UMLAttribute);
         this.log = [];
+        this.log.push('>> Attribute created: ' + this.name);
     }
 
     /**
