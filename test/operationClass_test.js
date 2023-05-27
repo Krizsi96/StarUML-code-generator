@@ -3,17 +3,17 @@ const myOperation = require('../src/operationClass.js');
 const testData = require('./testData.js');
 const TestUMLOperationWithEnumParameter = testData.TestUMLOperationWithEnumParameter;
 
-describe('Operation Tests', function () {
-    describe('constructor Tests', function () {
-        it('should construct operation with the right name', function () {
+describe('Operation Handling Tests', function () {
+    describe('When the constructor is called with "TestUMLOperationWithEnumParameter"', function () {
+        it('should construct operation with name: ' + TestUMLOperationWithEnumParameter.name, function () {
             const testOperation = new myOperation.Operation(TestUMLOperationWithEnumParameter);
             assert.equal(testOperation.name, TestUMLOperationWithEnumParameter.name);
         });
-        it('should construct operation with the right type', function () {
+        it('should construct operation with type: ' + TestUMLOperationWithEnumParameter.name, function () {
             const testOperation = new myOperation.Operation(TestUMLOperationWithEnumParameter);
             assert.equal(testOperation.returnType, TestUMLOperationWithEnumParameter.parameters[0].type);
         });
-        it('should construct operation with the right visibility', function () {
+        it('should construct operation with visibility: public', function () {
             const testOperation = new myOperation.Operation(TestUMLOperationWithEnumParameter);
             assert.equal(testOperation.visibility, 'public');
         });
@@ -31,8 +31,8 @@ describe('Operation Tests', function () {
         });
     });
 
-    describe('getDeclaration Tests', function () {
-        it('should return declaration for operation', function () {
+    describe('When getDeclaration is called on "TestUMLOperationWithEnumParameter', function () {
+        it('should return declaration for operation: ' + TestUMLOperationWithEnumParameter.name, function () {
             const testOperation = new myOperation.Operation(TestUMLOperationWithEnumParameter);
             let expectedDeclaration = 'void createLog(kLogType log_type, const char* file, int line, const char* message);';
             assert.equal(testOperation.getDeclaration(), expectedDeclaration);
