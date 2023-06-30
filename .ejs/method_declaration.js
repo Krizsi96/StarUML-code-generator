@@ -1,5 +1,5 @@
-const { getVisibility } = require('E:\\Projects\\UML_code_generator\\.ejs\\get_functions.js')
-const { getType } = require('E:\\Projects\\UML_code_generator\\.ejs\\get_functions.js')
+const { getVisibility } = require('/home/krizsi90/Documents/Projects/UML_code_generator/.ejs/get_functions.js')
+const { getType } = require('/home/krizsi90/Documents/Projects/UML_code_generator/.ejs/get_functions.js')
 
 /**
  * declare all methods with the same type of visibility

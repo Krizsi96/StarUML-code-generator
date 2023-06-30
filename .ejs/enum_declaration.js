@@ -1,4 +1,4 @@
-const { getVisibility } = require('E:\\Projects\\UML_code_generator\\.ejs\\get_functions.js')
+const { getVisibility } = require('/home/krizsi90/Documents/Projects/UML_code_generator/.ejs/get_functions.js')
 
 function collectUMLEnumerations(UMLelement) {
   let enumerations = [];

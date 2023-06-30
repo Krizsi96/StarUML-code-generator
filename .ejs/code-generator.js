@@ -14,7 +14,7 @@ function CodeGenerator(UMLelement) {
 }
 exports.CodeGenerator = CodeGenerator;
 
-const logFolderPath = 'E:\\Projects\\UML_code_generator\\.log\\';
+const logFolderPath = '/home/krizsi90/Documents/Projects/UML_code_generator/.log/';
 
 function CreateLogFile(header) {
   const json = JSON.stringify(header.log);
