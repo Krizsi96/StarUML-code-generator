@@ -7,6 +7,7 @@ import click
 DEAFULT_CODE_DIR = 'include/'
 DEFAULT_DIAGRAM_DIR = 'diagrams/'
 EJS_REQUIRE = 'REQUIRE_PATH'
+os_type = ''
 
 @click.group()
 def cli():
@@ -15,12 +16,8 @@ def cli():
 @click.command(help="build source code from UML models")
 @click.argument('source_model', type=click.Path(exists=True), required=True)
 @click.argument('output_dir', type=click.Path(exists=False), default=DEAFULT_CODE_DIR, required=False)
-@click.option('--package', '-p', required=True, help="package name")
+@click.option('--package', '-p', required=False, help="package name")
 def build_uml(source_model, output_dir, package):
-    click.echo(click.style("input arguments", fg="cyan"))
-    click.echo("source model: " + source_model)
-    click.echo("output directory: " + output_dir)
-    click.echo("package: " + package)
     init_ejs()
     generateHeaderFiles(source_model, output_dir, package)
     generateInterfaceDefinitions(source_model, output_dir, package)
@@ -52,14 +49,22 @@ def generateDiagrams(source_model, output_dir):
 
 def generateHeaderFiles(source_model, output_dir, package):
     click.echo(click.style("generate header files from UML classes", fg='cyan'))
-    command = f'{getStarUmlCommand()} ejs {source_model} -t {ejsPath()} -s {package}::@UMLClass -o "{output_dir}<%=filenamify(element.name)%>.hpp"'
+    if package is not None:
+        scope = f'{setPackage(package)}@UMLClass'
+    else:
+        scope = '@UMLClass'
+    command = f'{getStarUmlCommand()} ejs {source_model} -t {ejsPath()} -s {scope} -o "{output_dir}<%=filenamify(element.name)%>.hpp"'
     click.echo(click.style(command, fg='yellow'))
     subprocess.run(command, shell=True)
     click.echo()
 
 def generateInterfaceDefinitions(source_model, output_dir, package):
     click.echo(click.style("generate header files from UML interfaces", fg='cyan'))
-    command = f'{getStarUmlCommand()} ejs {source_model} -t {ejsPath()} -s {package}::@UMLInterface -o "{output_dir}<%=filenamify(element.name)%>.hpp"'
+    if package is not None:
+        scope = f'{setPackage(package)}@UMLInterface'
+    else:
+        scope = '@UMLInterface'
+    command = f'{getStarUmlCommand()} ejs {source_model} -t {ejsPath()} -s {scope} -o "{output_dir}<%=filenamify(element.name)%>.hpp"'
     click.echo(click.style(command, fg='yellow'))
     subprocess.run(command, shell=True)
     click.echo()
@@ -117,10 +122,20 @@ def ejsPath():
         return '.\ejs\cpp-class.ejs'
     else:
         return 'ejs/cpp-class.ejs'
+    
+def setPackage(package):
+    if os_type == 'windows':
+        click.echo(click.style("package can't be selected on windows", fg='red'))
+        return ''
+    else:
+        return f'{package}::'
 
-if os.name != 'nt':
-    cli.add_command(build_uml)
+cli.add_command(build_uml)
 cli.add_command(export_diagrams)
 
 if __name__ == '__main__':
+    if os.name == 'nt':
+        os_type = 'windows'
+    else:
+        os_type = 'linux'
     cli()
