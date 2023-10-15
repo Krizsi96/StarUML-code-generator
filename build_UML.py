@@ -2,6 +2,7 @@
 import os
 import subprocess
 from code_postprocessing import file
+import pathlib
 import click
 
 DEAFULT_CODE_DIR = "include/"
@@ -112,8 +113,8 @@ def postProcessCode(directory):
 
 
 def init_ejs():
-    ejs = file("ejs/cpp-class.ejs")
-    current_directory = os.getcwd()
+    ejs = file(f"{getPathOfScript()}/ejs/cpp-class.ejs")
+    current_directory = getPathOfScript()
 
     if os_type == "windows":
         current_directory = current_directory.replace("\\", "\\\\")
@@ -125,8 +126,8 @@ def init_ejs():
 
 
 def reset_ejs():
-    ejs = file("ejs/cpp-class.ejs")
-    current_directory = os.getcwd()
+    ejs = file(f"{getPathOfScript()}/ejs/cpp-class.ejs")
+    current_directory = getPathOfScript()
 
     if os_type == "windows":
         current_directory = current_directory.replace("\\", "\\\\")
@@ -135,6 +136,9 @@ def reset_ejs():
         )
     else:
         ejs.replacePart(f"{current_directory}/src/code-generator.js", f"{EJS_REQUIRE}")
+
+def getPathOfScript():
+    return pathlib.Path(__file__).parent.resolve()
 
 
 def getStarUmlCommand():
@@ -160,9 +164,9 @@ def deleteSvgFiles(directory):
 
 def ejsPath():
     if os_type == "windows":
-        return ".\ejs\cpp-class.ejs"
+        return f"{getPathOfScript()}\ejs\cpp-class.ejs"
     else:
-        return "ejs/cpp-class.ejs"
+        return f"{getPathOfScript()}/ejs/cpp-class.ejs"
 
 
 def setPackage(package):
