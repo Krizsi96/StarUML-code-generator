@@ -52,14 +52,14 @@ def generateDiagrams(source_model, output_dir):
 
 def generateHeaderFiles(source_model, output_dir, package):
     click.echo(click.style("generate header files from UML classes", fg='cyan'))
-    command = f'{getStarUmlCommand()} ejs {source_model} -t .\ejs\cpp-class.ejs -s {package}::@UMLClass -o "{output_dir}<%=filenamify(element.name)%>.hpp"'
+    command = f'{getStarUmlCommand()} ejs {source_model} -t {ejsPath()} -s {package}::@UMLClass -o "{output_dir}<%=filenamify(element.name)%>.hpp"'
     click.echo(click.style(command, fg='yellow'))
     subprocess.run(command, shell=True)
     click.echo()
 
 def generateInterfaceDefinitions(source_model, output_dir, package):
     click.echo(click.style("generate header files from UML interfaces", fg='cyan'))
-    command = f'{getStarUmlCommand()} ejs {source_model} -t ejs/cpp-class.ejs -s {package}::@UMLInterface -o "{output_dir}<%=filenamify(element.name)%>.hpp"'
+    command = f'{getStarUmlCommand()} ejs {source_model} -t {ejsPath()} -s {package}::@UMLInterface -o "{output_dir}<%=filenamify(element.name)%>.hpp"'
     click.echo(click.style(command, fg='yellow'))
     subprocess.run(command, shell=True)
     click.echo()
@@ -109,6 +109,12 @@ def deleteSvgFiles(directory):
       for filename in os.listdir(directory):
           if filename.endswith(".svg"):
               os.remove(os.path.join(directory, filename))
+              
+def ejsPath():
+    if os.name == 'nt':
+        return '.\ejs\cpp-class.ejs'
+    else:
+        return 'ejs/cpp-class.ejs'
 
 if os.name != 'nt':
     cli.add_command(build_uml)
