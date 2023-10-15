@@ -110,7 +110,8 @@ def deleteSvgFiles(directory):
           if filename.endswith(".svg"):
               os.remove(os.path.join(directory, filename))
 
-cli.add_command(build_uml)
+if os.name != 'nt':
+    cli.add_command(build_uml)
 cli.add_command(export_diagrams)
 
 if __name__ == '__main__':
