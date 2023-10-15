@@ -52,12 +52,17 @@ def generateDiagrams(source_model, output_dir):
 
 def generateHeaderFiles(source_model, output_dir, package):
     click.echo(click.style("generate header files from UML classes", fg='cyan'))
-    subprocess.run(['staruml', 'ejs', source_model, '-t', 'ejs/cpp-class.ejs', '-s', f'{package}::@UMLClass', '-o', f'{output_dir}<%=filenamify(element.name)%>.hpp'])
+    command = f'{getStarUmlCommand()} ejs {source_model} -t .\ejs\cpp-class.ejs -s {package}::@UMLClass -o "{output_dir}<%=filenamify(element.name)%>.hpp"'
+    click.echo(click.style(command, fg='yellow'))
+    subprocess.run(command, shell=True)
     click.echo()
 
 def generateInterfaceDefinitions(source_model, output_dir, package):
     click.echo(click.style("generate header files from UML interfaces", fg='cyan'))
-    subprocess.run(['staruml', 'ejs', source_model, '-t', 'ejs/cpp-class.ejs', '-s', f'{package}::@UMLInterface', '-o', f'{output_dir}<%=filenamify(element.name)%>.hpp'])
+    command = f'{getStarUmlCommand()} ejs {source_model} -t ejs/cpp-class.ejs -s {package}::@UMLInterface -o "{output_dir}<%=filenamify(element.name)%>.hpp"'
+    click.echo(click.style(command, fg='yellow'))
+    subprocess.run(command, shell=True)
+    click.echo()
 
 def formatHeaderFiles(directory):
     click.echo(click.style("format header files with clang (google style)", fg='cyan'))
@@ -65,6 +70,7 @@ def formatHeaderFiles(directory):
     os.system(f'clang-format -i -style=Google {directory}*.hpp')
     click.echo("clang-format -i -style=Google *.h")
     os.system(f'clang-format -i -style=Google {directory}*.h')
+    click.echo()
 
 def postProcessCode(directory):
     click.echo(click.style("postprocess code", fg='cyan'))
@@ -73,12 +79,18 @@ def postProcessCode(directory):
 def init_ejs():
     ejs = file('ejs/cpp-class.ejs')
     current_directory = os.getcwd()
-    ejs.replacePart(f'{EJS_REQUIRE}', f'{current_directory}/src/code-generator.js')
+    if os.name == 'nt':
+        ejs.replacePart(f'{EJS_REQUIRE}', f'{current_directory}\src\code-generator.js')
+    else:
+        ejs.replacePart(f'{EJS_REQUIRE}', f'{current_directory}/src/code-generator.js')
     
 def reset_ejs():
     ejs = file('ejs/cpp-class.ejs')
     current_directory = os.getcwd()
-    ejs.replacePart(f'{current_directory}/src/code-generator.js', f'{EJS_REQUIRE}')
+    if os.name == 'nt':
+        ejs.replacePart(f'{current_directory}\src\code-generator.js', f'{EJS_REQUIRE}')
+    else:
+        ejs.replacePart(f'{current_directory}/src/code-generator.js', f'{EJS_REQUIRE}')
     
 def getStarUmlCommand():
     if os.name == 'nt':
