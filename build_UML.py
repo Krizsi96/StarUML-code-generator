@@ -39,9 +39,14 @@ def export_diagrams(source_model, output_dir):
 
 def generateDiagrams(source_model, output_dir):
     click.echo(click.style("generate diagrams from UML model", fg='cyan'))
-    subprocess.run(['staruml', 'image', source_model, '-f', 'svg', '-o', f'{output_dir}<%=filenamify(element.name)%>_diagram.svg'])
+    star_uml_command = getStarUmlCommand()
+    command = f'{star_uml_command} image {source_model} -f svg -o "{output_dir}/<%=filenamify(element.name)%>.svg"'
+    subprocess.run(command, shell=True)
+    
+    python_command = getPythonCommand()
     current_directory = os.getcwd()
-    subprocess.run(['python3', 'svg_postprocess.py', f'{current_directory}/{output_dir}'])
+    command = f'{python_command} svg_postprocess.py {current_directory}/{output_dir}'
+    subprocess.run(command, shell=True)
     click.echo()
 
 def generateHeaderFiles(source_model, output_dir, package):
@@ -73,6 +78,18 @@ def reset_ejs():
     ejs = file('ejs/cpp-class.ejs')
     current_directory = os.getcwd()
     ejs.replacePart(f'{current_directory}/src/code-generator.js', f'{EJS_REQUIRE}')
+    
+def getStarUmlCommand():
+    if os.name == 'nt':
+        return '"C:\Program Files\StarUML\StarUML.exe"'
+    else:
+        return 'staruml'
+    
+def getPythonCommand():
+    if os.name == 'nt':
+        return 'python'
+    else:
+        return 'python3'
 
 cli.add_command(build_uml)
 cli.add_command(export_diagrams)
