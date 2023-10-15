@@ -35,6 +35,7 @@ def export_diagrams(source_model, output_dir):
     click.echo(click.style("input arguments", fg="cyan"))
     click.echo("source model: " + source_model)
     click.echo("output directory: " + output_dir)
+    deleteSvgFiles(output_dir)
     generateDiagrams(source_model, output_dir)
 
 def generateDiagrams(source_model, output_dir):
@@ -90,6 +91,12 @@ def getPythonCommand():
         return 'python'
     else:
         return 'python3'
+    
+def deleteSvgFiles(directory):
+    if os.path.exists(directory):
+      for filename in os.listdir(directory):
+          if filename.endswith(".svg"):
+              os.remove(os.path.join(directory, filename))
 
 cli.add_command(build_uml)
 cli.add_command(export_diagrams)
