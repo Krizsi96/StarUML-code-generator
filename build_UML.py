@@ -80,7 +80,8 @@ def init_ejs():
     ejs = file('ejs/cpp-class.ejs')
     current_directory = os.getcwd()
     if os.name == 'nt':
-        ejs.replacePart(f'{EJS_REQUIRE}', f'{current_directory}\src\code-generator.js')
+        current_directory = current_directory.replace('\\', '\\\\')
+        ejs.replacePart(f'{EJS_REQUIRE}', f'{current_directory}\\\\src\\\\code-generator.js')
     else:
         ejs.replacePart(f'{EJS_REQUIRE}', f'{current_directory}/src/code-generator.js')
     
@@ -88,7 +89,8 @@ def reset_ejs():
     ejs = file('ejs/cpp-class.ejs')
     current_directory = os.getcwd()
     if os.name == 'nt':
-        ejs.replacePart(f'{current_directory}\src\code-generator.js', f'{EJS_REQUIRE}')
+        current_directory = current_directory.replace('\\', '\\\\')
+        ejs.replacePart(f'{current_directory}\\\\src\\\\code-generator.js', f'{EJS_REQUIRE}')
     else:
         ejs.replacePart(f'{current_directory}/src/code-generator.js', f'{EJS_REQUIRE}')
     
